@@ -230,7 +230,7 @@ public class ClientRecordSerializer<R> {
     }
 
     R readRec(ClientSchema schema, ClientMessageUnpacker in, TuplePart partToRead, TuplePart dataPart) {
-        Marshaller marshaller = schema.getMarshaller(mapper, partToRead);
+        Marshaller marshaller = schema.getMarshaller(mapper, partToRead, true);
 
         var tupleReader = new BinaryTupleReader(schema.columns().length, in.readBinaryUnsafe());
         ClientMarshallerReader reader = new ClientMarshallerReader(tupleReader, schema.columns(partToRead), dataPart);

@@ -93,7 +93,7 @@ public class ClientKeyValueViewTest extends AbstractClientTableTest {
     }
 
     @Test
-    public void testMissingValueColumnsThrowException() {
+    public void testMissingValueColumns() {
         Table table = fullTable();
         KeyValueView<Tuple, Tuple> kvView = table.keyValueView();
         KeyValueView<IncompletePojo, IncompletePojo> pojoView = table.keyValueView(IncompletePojo.class, IncompletePojo.class);
@@ -104,12 +104,11 @@ public class ClientKeyValueViewTest extends AbstractClientTableTest {
         key.id = "1";
         key.gid = 1;
 
-        Throwable e = assertThrowsWithCause(
-                () -> pojoView.get(null, key),
-                IgniteException.class,
-                "Failed to deserialize server response: No mapped object field found for column 'ZBOOLEAN'"
-        );
-        assertThat(Arrays.asList(e.getStackTrace()), anyOf(hasToString(containsString("ClientKeyValueView"))));
+        IncompletePojo val = pojoView.get(null, key);
+
+        assertEquals(11, val.zbyte);
+        assertEquals("x", val.zstring);
+        assertArrayEquals(new byte[]{1, 2}, val.zbytes);
     }
 
     @Test

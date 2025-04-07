@@ -102,10 +102,11 @@ public class ClientRecordViewTest extends AbstractClientTableTest {
         key.id = "1";
         key.gid = 1;
 
-        // This POJO does not have fields for all table columns, which is not allowed (to avoid unexpected data loss).
-        IgniteException ex = assertThrows(IgniteException.class, () -> pojoView.get(null, key));
-        assertEquals("Failed to deserialize server response: No mapped object field found for column 'ZBOOLEAN'", ex.getMessage());
-        assertThat(Arrays.asList(ex.getStackTrace()), anyOf(hasToString(containsString("ClientRecordView"))));
+        IncompletePojo val = pojoView.get(null, key);
+
+        assertEquals(11, val.zbyte);
+        assertEquals("x", val.zstring);
+        assertArrayEquals(new byte[]{1, 2}, val.zbytes);
     }
 
     @Test
